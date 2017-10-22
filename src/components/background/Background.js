@@ -1,11 +1,11 @@
 import React from 'react';
-import {BackgroundImage} from './background.style.js'
+import {BackgroundImage, BackgroundImageDarken} from './background.style.js'
 
 function Background({img}){
-    console.log(img);
     return(
         <div>
-        <BackgroundImage image={img}/>
+            <BackgroundImage image={img}/>
+            <BackgroundImageDarken/>
         </div>
     )
 }
