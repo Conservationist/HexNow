@@ -18,6 +18,8 @@ export const BackgroundImage = styled.div`
     z-index: -2;
     backdrop-filter: none;
     transform: translateZ(0);
+    width: 100%;
+    height: 100vh;
 `
 export const BackgroundImageDarken = styled.div`
     position: absolute;
@@ -28,4 +30,6 @@ export const BackgroundImageDarken = styled.div`
     background-color: black;
     opacity: .5;
     z-index: -1;
+    width: 100%;
+    height: 100vh;
 `
