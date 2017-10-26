@@ -1,0 +1,13 @@
+{ HEXNOW TODO LIST}
+
+✔ Get time working. @critical @done (2017-10-26 23:53:09)
+✔ get firebase working @done (2017-10-26 23:53:41)
+☐ decide if login should be a modal or should be www.hexnow.com/login ? @high 
+☐ create a login modal, figure out a way to get the data from name.input when db request for name comes back as null @critical 
+☐ make name input, task input
+☐ create a feature to let users "like" an image, so that in the future they can select that background from a semi collection
+☐ createb a feature to let people choose which category they would like their images to come from, and also choose the photographer if they have a favorite one
+☐ sort out a lot of db shit, maybe time to start using redux ?
+☐ start theming everything with styled components to cut down on repeated code, also make imports more efficient. 
+☐ create a settings menu, to manage account settings, and provide a name change every month maybe?
+☐ think of more things to add @critical 
