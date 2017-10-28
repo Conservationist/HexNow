@@ -4,6 +4,7 @@ import Background from './components/background/Background';
 import Quote from './components/quote/quote';
 import quotes from './quotes.json';
 import CenterInfo from './components/center/centerinfo';
+import SignIn from './components/signin/sign_in';
 import firebase from 'firebase';
 // LETS GO.
 
@@ -12,15 +13,9 @@ class Home extends Component {
     super(props);
     this.state = {
       loading: 'true',
+      logged_in: null,
+      userDisplay_name: null
     }
-  }
-  componentWillMount(){
-    let config = {
-      apiKey: "AIzaSyCEiObiNI-GR9JIHGf_xNgbRrZkM3xvKgg",
-      authDomain: "hexnow-2004d.firebaseapp.com",
-      databaseURL: "https://hexnow-2004d.firebaseio.com/"
-    };
-    firebase.initializeApp(config);
   }
   componentDidMount(){
     axios.get(`https://source.unsplash.com/1600x900/?ocean`)
@@ -29,13 +24,26 @@ class Home extends Component {
         const rannum = Math.floor(Math.random() * 102)
         this.setState({loading:'false', ImageURL:img, QuoteBody: quotes.quotes[rannum].quote, QuoteAuthor: quotes.quotes[rannum].author})
       });
+    firebase.auth().onAuthStateChanged(user => {
+      if(user){
+        this.setState({logged_in: true});
+        let get_user_display_name = firebase.database().ref('users/' + user.uid + '/display_name');
+        get_user_display_name.on('value', snapshot => {
+          this.setState({userDisplay_name: snapshot.val()})
+        })
+      } else {
+        return this.setState({logged_in: false, userDisplay_name: 'User'});
+      }
+    });
   }
   render() {
+    console.log(this.state.logged_in);
     return (
       <div className="App">
         <Background img={this.state.ImageURL}/>
+        <SignIn loggedin={this.state.logged_in}/>
+        <CenterInfo name={this.state.userDisplay_name}/>
         <Quote quoteBody={this.state.QuoteBody} quoteAuthor={this.state.QuoteAuthor}/>
-        <CenterInfo/>
       </div>
     );
   }
