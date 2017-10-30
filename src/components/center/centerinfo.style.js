@@ -13,7 +13,7 @@ export const H1 = styled.h1`
 export const DIV = styled.div`
     height: 200px;
     position: absolute;
-    top: 35%;
+    top: 30%;
     right: 0;
     left: 0;
     bottom: 0;

@@ -31,7 +31,10 @@ export const SPAN = styled.span`
     cursor: pointer;
     height: 100px;
     width: 100px;
-
+    opacity: .7;
+    &:hover{
+        opacity 1;
+    }
 `
 export const DIV = styled.div`
     position: fixed;

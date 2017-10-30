@@ -18,11 +18,18 @@ class CenterTime extends React.Component {
         clearInterval(this.timerID);
     }
     timeUpdate() {
+        console.log();
         const date = new Date();
+        let pref_time;
+        if(this.props.prefTime === 24){
+            pref_time = false;
+        } else {
+            pref_time = true;
+        }
         let options = {
             hour: 'numeric',
             minute: 'numeric',
-            hour12: true
+            hour12: pref_time
         }
         const timeString = date.toLocaleString('en-UK', options);
         this.setState({Time: timeString})

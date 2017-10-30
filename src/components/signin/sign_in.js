@@ -30,12 +30,13 @@ class SignIn extends React.Component {
             this.setState({login_type: 'Login'});
         }
     }
-    handleClick(){     
+    handleClick(){
         if(this.state.logged_in === false){
             this.setState({modal_toggle: true});
+            console.log('clicked');
         } else {
-            firebase.auth().signOut();
             this.setState({logged_in: false});
+            firebase.auth().signOut();
         }
     }
     loginClick(e){
@@ -62,7 +63,6 @@ class SignIn extends React.Component {
         fba.createUserWithEmailAndPassword(this.state.email, this.state.password)
             .catch(e => {
                 let errorMessage = e.message;
-                console.log(errorMessage);
                 if(errorMessage != null){
                     this.setState({status: errorMessage});
                     return;

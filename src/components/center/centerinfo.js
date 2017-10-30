@@ -1,23 +1,30 @@
 import React from 'react';
 import CenterTime from './centertime';
 import {H1, DIV} from './centerinfo.style';
+import InputTrigger from './inputs/inputTrigger';
 
 class CenterInfo extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-            Name: " "
+            usr_name: null
         }
     }
-    componentDidMount(){
+    componentWillReceiveProps(){
+        this.setState({usr_name: this.props.userName})
     }
     render(){
         return(
-        <DIV>
-            <H1>The time is currently</H1>
-            <CenterTime/>
-            <H1>{this.props.name}.</H1>
-        </DIV>
+        <div>
+            <DIV>
+                <H1>The time is currently</H1>
+                <CenterTime prefTime={this.props.userTime}/>
+                <H1>{this.props.userName}.</H1>
+            </DIV>
+            <div>
+                <InputTrigger userTask={this.props.userTask}userid={this.props.userInfo} username={this.props.userName} loggedin={this.props.loggedin}/>
+            </div>
+        </div>
         )
     }
 }

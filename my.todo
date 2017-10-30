@@ -1,15 +1,41 @@
 { HEXNOW TODO LIST}
+    ✔ Get time working. @critical @done (2017-10-26 23:53:09)
+    ✔ get firebase working @done (2017-10-26 23:53:41)
+    ✔ decide if login should be a modal or should be www.hexnow.com/login ? @high @done (2017-10-27 15:50:45)
+    ✔ create a login modal, figure out a way to get the data from name.input when db request for name comes back as null @critical @done (2017-10-28 16:34:07)
+    ✔ make name input, task input @done (2017-10-30 14:00:16)
+    ☐ add a menu for all these features i want to add, rethinking using an input for name, maybe just a dialog box telling users to go use the menu ?
+    ☐ create a feature to let users "like" an image, so that in the future they can select that background from a semi collection @critical 
+    ☐ create a feature to let people choose which category they would like their images to come from, and also choose the photographer if they have a favorite one
+    ☐ sort out a lot of state shit, maybe time to start using redux ? @critical 
+    ☐ start theming everything with styled components to cut down on repeated code, also make imports more efficient. @low 
+    ☐ create a settings menu, to manage account settings, and provide a name change every month maybe? @low 
+    ☐ think of more things to add @critical
+    ☐ FIX THE FUCKING STYLES ON SIGN_IN.JS @high 
 
-✔ Get time working. @critical @done (2017-10-26 23:53:09)
-✔ get firebase working @done (2017-10-26 23:53:41)
-✔ decide if login should be a modal or should be www.hexnow.com/login ? @high @done (2017-10-27 15:50:45)
-✔ create a login modal, figure out a way to get the data from name.input when db request for name comes back as null @critical @done (2017-10-28 16:34:07)
-☐ make name input, task input
-☐ add a menu for all these features i want to add, rethinking using an input for name, maybe just a dialog box telling users to go use the menu ? 
-☐ create a feature to let users "like" an image, so that in the future they can select that background from a semi collection
-☐ create a feature to let people choose which category they would like their images to come from, and also choose the photographer if they have a favorite one
-☐ sort out a lot of db shit, maybe time to start using redux ?
-☐ start theming everything with styled components to cut down on repeated code, also make imports more efficient. 
-☐ create a settings menu, to manage account settings, and provide a name change every month maybe?
-☐ think of more things to add @critical
-☐ FIX THE FUCKING STYLES ON SIGN_IN.JS @high 
+{ BUGS }
+    ✔ some shit going on when you register, name doesn't seem to update. @low @done (2017-10-28 22:30:51) hacked it this.setState({userDisplay_name: null}) at start
+    ✔ fucking nameinput pops up for a second when you login. @high @done (2017-10-29 13:14:34)
+    ☐ fix the quotes because they're either too long or just terrible religious ones that are not needed.
+    ☐ lots of shit going on when user registers, my thought is some components are not getting passed proper data.
+
+
+{Notes for myself}
+    First think how many tasks we want to display, I'm thinking 1 main task, or 5 tasks maxed to like 100 words?
+    If 5 tasks are being displayed, we can have 1 main tasks, 4 lesser tasks, so that the design looks a bit more clean.
+    DB structure would look like this:
+        const dbpath = 'users/' + user.id + '/tasks'
+        to add a task we would:
+            have to add all the tasks to an array, then, main task is ALWAYS going to be indexed to 0, so then the other 4 can simply be [1] - [4] which is more simple imo
+            or maybe not.
+            this.state {
+                tasks: []    
+            }
+            onSubmit(){
+                let val = e.target.value;
+                this.setState({ tasks: [...this.state.tasks, val] })    
+            }
+            dbpath.update() 
+    after, for the input, we want to render the input when: 
+        1. db:tasks has no children.
+        2. db:tasks children have been deleted.
