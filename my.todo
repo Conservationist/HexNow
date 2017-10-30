@@ -16,8 +16,10 @@
 { BUGS }
     ✔ some shit going on when you register, name doesn't seem to update. @low @done (2017-10-28 22:30:51) hacked it this.setState({userDisplay_name: null}) at start
     ✔ fucking nameinput pops up for a second when you login. @high @done (2017-10-29 13:14:34)
-    ☐ fix the quotes because they're either too long or just terrible religious ones that are not needed.
-    ☐ lots of shit going on when user registers, my thought is some components are not getting passed proper data.
+    ✔ fix the quotes because they're either too long or just terrible religious ones that are not needed. @done (2017-10-30 15:32:25)
+    ✔ logout then try to login doesn't really work, have to click twice to get the modal to pop up again. @done (2017-10-30 16:02:43)
+    ✔ lots of shit going on when user registers, my thought is some components are not getting passed proper data. @done (2017-10-30 16:04:03) (also made time load instantly now.)
+    ☐ need to move the db request in './Home.js' so that the page loads when we have the info, because shit is hitting the fan atm.
 
 
 {Notes for myself}
