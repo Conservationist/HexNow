@@ -29,7 +29,6 @@ export const INPUT = styled.input`
     font-size: 2em;
     padding-bottom: 4px;
     margin: 0 auto;
-    display: block;
     background: 0;
     border: 0;
     border-bottom: 3px solid ${Colors.main_white};
@@ -41,4 +40,5 @@ export const INPUT = styled.input`
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
+    text-align: left;
 `;

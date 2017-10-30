@@ -9,6 +9,7 @@ class CenterTime extends React.Component {
         }
     }
     componentDidMount() {
+        this.timeUpdate();
         this.timerID = setInterval(
             () => this.timeUpdate(),
             1000

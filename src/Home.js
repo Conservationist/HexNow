@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Background from './components/background/Background';
 import Quote from './components/quote/quote';
-import quotes from './quotes.json';
 import CenterInfo from './components/center/centerinfo';
 import SignIn from './components/signin/sign_in';
 import firebase from 'firebase';
@@ -23,7 +22,6 @@ class Home extends Component {
   componentDidMount(){
     firebase.auth().onAuthStateChanged(user => {
       if(user){
-        this.setState({userDisplay_name: null})
         this.setState({logged_in: true, user_id: user.uid});
         let get_user_display_name = firebase.database().ref('users/' + user.uid + '/');
         // async function get_user_Data(user){
@@ -34,7 +32,7 @@ class Home extends Component {
         get_user_display_name.on('value', snapshot => {
           console.log(snapshot.val());
           let db_val = snapshot.val();
-          if(db_val.display_name === undefined){
+          if(db_val.display_name === undefined || db_val.display_name === null){
             this.setState({userDisplay_name: 'User'})
           } else {
             this.setState({
@@ -55,18 +53,17 @@ class Home extends Component {
     axios.get(`https://source.unsplash.com/1600x900/?coffee`)
       .then(res =>{
         let img = res.request.responseURL
-        const rannum = Math.floor(Math.random() * 102)
-        this.setState({loading:'false', ImageURL:img, QuoteBody: quotes.quotes[rannum].quote, QuoteAuthor: quotes.quotes[rannum].author})
+        this.setState({loading:'false', ImageURL:img})
       });
   }
   render() {
-    console.log(this.state.user_pref_time)
+    console.log(this.state.userDisplay_name);
     return (
       <div className="App">
         <Background img={this.state.ImageURL}/>
         <SignIn loggedin={this.state.logged_in}/>
-        <CenterInfo userTask={this.state.user_task}userTime={this.state.user_pref_time} userInfo={this.state.user_id} loggedin={this.state.logged_in} userName={this.state.userDisplay_name}/>
-        <Quote quoteBody={this.state.QuoteBody} quoteAuthor={this.state.QuoteAuthor}/>
+        <CenterInfo userTask={this.state.user_task} userTime={this.state.user_pref_time} userInfo={this.state.user_id} loggedin={this.state.logged_in} username={this.state.userDisplay_name}/>
+        <Quote/>
       </div>
     );
   }
