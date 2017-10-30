@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"uEAEA,KACE,SACA,UACA,gCAAqC","file":"static/css/main.ae86a339.css","sourcesContent":["@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Open Sans', sans-serif;\n}\n\n\n\n// WEBPACK FOOTER //\n// ./src/index.css"],"sourceRoot":""}
