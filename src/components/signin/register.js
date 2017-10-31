@@ -1,39 +1,28 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
+import {connect} from 'react-redux';
 import {ModalStyles, H1, ContentDiv, CloseModal, RegisterText, RegisterLink, ModalInput, SignInButton} from './sign_in.style';
-class Register extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            conf_password: '',
-            status: '',
-            modal_toggle: false,
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.registerClick = this.registerClick.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
-    }
-    componentDidMount(props) {
-        this.setState({modal_toggle: this.props.modal, status: this.props.errorMessage});
-    }
-    
+import {DisplayLoginModal, SetUserEmail, SetUserPassword, SetUserConfPassword, SetUserErrorMessage} from '../../actions/registrationActions';
+class Register extends Component {   
     handleChange(e){
-        this.setState({[e.target.name]: e.target.value});
+        if(e.target.name === "email"){
+            return this.props.SetUserEmail(e.target.value)
+        } else if (e.target.name === "password"){
+            return this.props.SetUserPassword(e.target.value)
+        } else {
+            return this.props.SetUserPassword(e.target.value)
+        }
     }
-    closeModal(e){
-        this.setState({modal_toggle: false});
+    closeModal(props){
+        this.props.DisplayLoginModal(false)
     }
     registerClick(e){
         e.preventDefault(e);
-        if(this.state.password === this.state.conf_password){
-            this.props.register(this.state.email, this.state.password);
+        if(this.props.register.user_password === this.props.register.user_conf_password){
+            this.props.register(this.props.register.user_email, this.props.register.user_password);
         } else {
-            this.setState({status: 'Passwords do not match.'})
+            this.props.SetUserErrorMessage('Passwords do not match.')
         }
-
     }
     handleLogin(){
         const register_display = false;
@@ -42,29 +31,52 @@ class Register extends Component {
     render() {
         return (
             <Modal
-            isOpen={this.state.modal_toggle}
+            isOpen={this.props.register.display_login_modal}
             style={ModalStyles}>
                 <H1>Login</H1>
-                <RegisterText>Existing user? Login <RegisterLink onClick={this.handleLogin}>here</RegisterLink>.</RegisterText>
+                <RegisterText>Existing user? Login <RegisterLink onClick={this.handleLogin.bind(this)}>here</RegisterLink>.</RegisterText>
                 <ContentDiv>
                     <form>
-                        <ModalInput placeholder="Email Adress"name="email" field="email" label="email" type="text" onChange={this.handleChange}/>
+                        <ModalInput placeholder="Email Adress"name="email" field="email" label="email" type="text" onChange={this.handleChange.bind(this)}/>
                         <br />
-                        <ModalInput placeholder="Password"name="password" field="password" label="password" type="password" onChange={this.handleChange}/>
+                        <ModalInput placeholder="Password"name="password" field="password" label="password" type="password" onChange={this.handleChange.bind(this)}/>
                         <br />
-                        <ModalInput placeholder="Confirm Password"name="conf_password" field="password" label="password" type="password" onChange={this.handleChange}/>
+                        <ModalInput placeholder="Confirm Password"name="conf_password" field="password" label="password" type="password" onChange={this.handleChange.bind(this)}/>
                         <br />
-                        <SignInButton onClick={this.registerClick}>Register</SignInButton>
+                        <SignInButton onClick={this.registerClick.bind(this)}>Register</SignInButton>
                         <br />
-                        <p>{this.state.status}</p>
+                        <p>{this.props.register.user_error_message}</p>
                     </form>
                 </ContentDiv>
                 <ContentDiv>
-                <CloseModal onClick={this.closeModal}>Close</CloseModal>
+                <CloseModal onClick={this.closeModal.bind(this)}>Close</CloseModal>
                 </ContentDiv> 
             </Modal>
         );
     }
 }
-
-export default Register;
+const mapStateToProps = (state) => {
+    return {
+      register: state.register
+    }
+  }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        DisplayLoginModal: (bool) => {
+            dispatch(DisplayLoginModal(bool));
+        },
+        SetUserEmail: (email) => {
+            dispatch(SetUserEmail(email));
+        },
+        SetUserPassword: (passwd) => {
+            dispatch(SetUserPassword(passwd));
+        },
+        SetUserConfPassword: (passwd) => {
+            dispatch(SetUserConfPassword(passwd));
+        },
+        SetUserErrorMessage: (message) => {
+            dispatch(SetUserErrorMessage(message));
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

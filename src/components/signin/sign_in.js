@@ -1,42 +1,31 @@
 import React from 'react';
-import {SPAN, DIV} from './sign_in.style';
+import {connect} from 'react-redux';
 import firebase from 'firebase';
+import {SPAN, DIV} from './sign_in.style';
 import Login from './login';
 import Register from './register';
+import {updateUserStatus} from '../../actions/loggedActions';
+import {SetUserErrorMessage, SetUserLoginType, DisplayLoginModal, SetRegistrationMode} from '../../actions/registrationActions';
+
 class SignIn extends React.Component {
-    constructor(){
-        super();
-        this.state = {
-            logged_in: false,
-            email: '',
-            password: '',
-            modal_toggle: false,
-            status: '',
-            login_type: '',
-            register_mode: false
-        }
-        this.handleClick = this.handleClick.bind(this);
-    }
     componentDidMount() {
-            firebase.auth().onAuthStateChanged(user => {
-                if(user) {
-                    console.log('true');
-                    this.setState({
-                        logged_in: true,
-                        login_type: 'Logout'
-                    });
-                } else {
-                    this.setState({logged_in: false, login_type: 'Login'});
-                }
-            });
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                this.props.updateUserStatus(true);
+                this.props.SetUserLoginType('Logout');
+            } else {
+                this.props.updateUserStatus(false);
+                this.props.SetUserLoginType('Login');
+            }
+        });
     }
     handleClick(){
-        if(this.state.logged_in === false){
-            this.setState({modal_toggle: true});
+        if(this.props.status === false){
+            this.props.DisplayLoginModal(true);
         } else {
             firebase.auth().signOut();
-            this.setState({modal_toggle: false, logged_in: false});
-   
+            this.props.DisplayLoginModal(false);
+            this.props.updateUserStatus(false);
         }
     }
     handleLogin(email, password){
@@ -44,20 +33,20 @@ class SignIn extends React.Component {
         fba.signInWithEmailAndPassword(email, password)
             .catch(e => {
                 let errorMessage = e.message;
-                console.log(errorMessage);
                 if(errorMessage != null){
-                    this.setState({status: errorMessage});
+                    this.props.SetUserErrorMessage(errorMessage);
                     return;
                 }
             });
         fba.onAuthStateChanged(user =>{
             if(user){
-               this.setState({modal_toggle: false, logged_in: true});
+               this.props.DisplayLoginModal(false);
+               this.props.updateUserStatus(true);
             }
         });
     }
     handleRegisterMode(register_display){
-        this.setState({register_mode: register_display});
+        this.props.SetRegistrationMode(register_display);
     }
     handleRegister(email, password){
         let fba = firebase.auth();
@@ -65,7 +54,7 @@ class SignIn extends React.Component {
             .catch(e => {
                 let errorMessage = e.message;
                 if(errorMessage != null){
-                    this.setState({status: errorMessage});
+                    this.props.SetUserErrorMessage(errorMessage);
                     return;
                 }
             });
@@ -73,28 +62,55 @@ class SignIn extends React.Component {
             if(user){
                 firebase.database().ref('users/' + user.uid).set({
                     user_email: user.email,
-                    display_name: null,
-                    pref_time: 12,
+                    user_name: null,
+                    user_pref_time: 12,
                     
                 });
-                this.setState({modal_toggle: false, logged_in: true});
+                this.props.DisplayLoginModal(false);
+                this.props.updateUserStatus(true);
             }
         });
     }
     render(){
+        console.log(this.props.register.display_reg_mode);
         let Template = () => {
-            if(this.state.register_mode === false){
-                return <Login errorMessage={this.state.status} registertoggle={this.handleRegisterMode.bind(this)} login={this.handleLogin.bind(this)} modal={this.state.modal_toggle}/>
+            if(this.props.register.display_reg_mode === false){
+                return <Login/>
             } else {
-                return <Register errorMessage={this.state.status} registertoggle={this.handleRegisterMode.bind(this)} modal={this.state.modal_toggle} register={this.handleRegister.bind(this)}/>
+                return <Register/>
             }
         }
         return(
             <DIV>
-                <SPAN onClick={this.handleClick}>{this.state.login_type}</SPAN>
+                <SPAN onClick={this.handleClick.bind(this)}>{this.props.register.user_login_type}</SPAN>
                 <Template/>
             </DIV>
         )
     }
 }
-export default SignIn
+const mapStateToProps = (state) => {
+    return {
+      status: state.logged_status.logged_in,
+      register: state.register,
+    }
+  }
+const mapDispatchToProps = (dispatch) => {
+    return{
+        DisplayLoginModal: (bool) => {
+            dispatch(DisplayLoginModal(bool));
+        },
+        updateUserStatus: (status) => {
+            dispatch(updateUserStatus(status));
+        },
+        SetRegistrationMode: (bool) => {
+            dispatch(SetRegistrationMode(bool));
+        },
+        SetUserLoginType: (loginType) => {
+            dispatch(SetUserLoginType(loginType));
+        },
+        SetUserErrorMessage: (message) => {
+            dispatch(SetUserErrorMessage(message));
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)

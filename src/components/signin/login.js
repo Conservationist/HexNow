@@ -1,61 +1,74 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-import {ModalStyles, H1, ContentDiv, CloseModal, RegisterText, RegisterLink, ModalInput, SignInButton} from './sign_in.style';
+import {ModalStyles, H1, ContentDiv, CloseModal, RegisterText, RegisterLink, SignInButton} from './sign_in.style';
+import {connect} from 'react-redux';
+import {LogUserIn, DisplayLoginModal, SetUserEmail, SetUserPassword, SetRegistrationMode} from '../../actions/registrationActions';
+import LoginInput from './login.input'
 class Login extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            modal_toggle: false,
+    handleChange(e, val, name){
+        console.log(e);
+        if(name === "email"){
+            return this.props.SetUserEmail(e)
+        } else {
+            return this.props.SetUserPassword(e)
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.loginClick = this.loginClick.bind(this);
-        this.handleRegister = this.handleRegister.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-    }
-    componentDidMount(props) {
-        this.setState({modal_toggle: this.props.modal, status: this.props.errorMessage});
-    }
-    
-    handleChange(e){
-        this.setState({[e.target.name]: e.target.value});
     }
     handleRegister(props){
         const register_display = true;
         this.props.registertoggle(register_display);
     }
     closeModal(e){
-        this.setState({modal_toggle: false});
+        this.props.DisplayLoginModal(false)
     }
     loginClick(e){
         e.preventDefault(e)
-        this.props.login(this.state.email, this.state.password);
+        this.props.LogUserIn(this.props.user_email, this.props.user_password);
     }
     render() {
+        console.log(this.props.register.user_email);
         return (
             <Modal
-            isOpen={this.state.modal_toggle}
+            isOpen={this.props.register.display_login_modal}
             style={ModalStyles}>
                 <H1>Login</H1>
-                <RegisterText>New user? Register <RegisterLink onClick={this.handleRegister}>here</RegisterLink>.</RegisterText>
+                <RegisterText>New user? Register <RegisterLink onClick={this.handleRegister.bind(this)}>here</RegisterLink>.</RegisterText>
                 <ContentDiv>
                     <form>
-                        <ModalInput value={this.state.email} placeholder="Email Adress"name="email" field="email" label="email" type="text" onChange={this.handleChange}/>
+                        <LoginInput InputValue={this.handleChange.bind(this)}inputType={'email'} inputName={'email'} inputPlaceholder={'Email Adress'}/>
                         <br />
-                        <ModalInput placeholder="Password"name="password" field="password" label="password" type="password" onChange={this.handleChange}/>
+                        <LoginInput inputType={'password'} inputName={'password'} inputPlaceholder={'Password'}/>
                         <br />
-                        <SignInButton onClick={this.loginClick}>Log in</SignInButton>
+                        <SignInButton onClick={this.loginClick.bind(this)}>Log in</SignInButton>
                         <br />
-                        <p>{this.state.status}</p>
+                        <p>{this.props.register.user_error_message}</p>
                     </form>
                 </ContentDiv>
                 <ContentDiv>
-                <CloseModal onClick={this.closeModal}>Close</CloseModal>
+                <CloseModal onClick={this.closeModal.bind(this)}>Close</CloseModal>
                 </ContentDiv> 
             </Modal>
         );
     }
 }
-
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+      register: state.register
+    }
+  }
+const mapDispatchToProps = (dispatch) => {
+    return{
+        DisplayLoginModal: (bool) => {
+            dispatch(DisplayLoginModal(bool));
+        },
+        SetUserEmail: (email) => {
+            dispatch(SetUserEmail(email));
+        },
+        SetUserPassword: (passwd) => {
+            dispatch(SetUserPassword(passwd));
+        },
+        LogUserIn: (email, password) => {
+            dispatch(LogUserIn(email, password));
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
