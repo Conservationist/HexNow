@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {connect} from 'react-redux';
 import {ModalStyles, H1, ContentDiv, CloseModal, RegisterText, RegisterLink, ModalInput, SignInButton} from './sign_in.style';
-import {DisplayLoginModal, SetUserEmail, SetUserPassword, SetUserConfPassword, SetUserErrorMessage} from '../../actions/registrationActions';
+import {LogUserIn, SetUserEmail, SetUserPassword, SetUserConfPassword, SetUserErrorMessage, RegisterUser} from '../../actions/registrationActions';
+import {DisplayLoginModal, SetRegistrationMode} from '../../actions/displayActions';
 class Register extends Component {   
     handleChange(e){
         if(e.target.name === "email"){
@@ -10,28 +11,29 @@ class Register extends Component {
         } else if (e.target.name === "password"){
             return this.props.SetUserPassword(e.target.value)
         } else {
-            return this.props.SetUserPassword(e.target.value)
+            return this.props.SetUserConfPassword(e.target.value)
         }
     }
     closeModal(props){
-        this.props.DisplayLoginModal(false)
+        this.props.DisplayLoginModal(false),
+        this.props.SetUserErrorMessage(''),
+        this.props.SetRegistrationMode(false);
     }
     registerClick(e){
         e.preventDefault(e);
         if(this.props.register.user_password === this.props.register.user_conf_password){
-            this.props.register(this.props.register.user_email, this.props.register.user_password);
+            this.props.RegisterUser(this.props.register.user_email, this.props.register.user_password);
         } else {
             this.props.SetUserErrorMessage('Passwords do not match.')
         }
     }
     handleLogin(){
-        const register_display = false;
-        this.props.registertoggle(register_display);
+        this.props.SetRegistrationMode(false);
     }
     render() {
         return (
             <Modal
-            isOpen={this.props.register.display_login_modal}
+            isOpen={this.props.display.display_login_modal}
             style={ModalStyles}>
                 <H1>Login</H1>
                 <RegisterText>Existing user? Login <RegisterLink onClick={this.handleLogin.bind(this)}>here</RegisterLink>.</RegisterText>
@@ -57,7 +59,8 @@ class Register extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-      register: state.register
+      register: state.register,
+      display: state.display
     }
   }
 const mapDispatchToProps = (dispatch) => {
@@ -76,6 +79,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         SetUserErrorMessage: (message) => {
             dispatch(SetUserErrorMessage(message));
+        },
+        SetRegistrationMode: (bool) => {
+            dispatch(SetRegistrationMode(bool));
+        },
+        RegisterUser: (email, password) => {
+            dispatch(RegisterUser(email, password));
         }
     }
 }

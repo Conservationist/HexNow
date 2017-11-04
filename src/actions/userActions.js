@@ -16,3 +16,9 @@ export const updateUserData = (data) => {
         payload: data
     }
 }
+export const updateUserDayTask = (task) => {
+    return {
+        type: 'SET_USER_TASK',
+        payload: task
+    }
+}

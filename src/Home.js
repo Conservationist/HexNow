@@ -6,7 +6,7 @@ import SignIn from './components/signin/sign_in';
 import firebase from 'firebase';
 import {connect} from 'react-redux';
 import {updateUserStatus} from './actions/loggedActions';
-import {updateUserData, UpdateUserId} from './actions/userActions';
+import {UpdateUserId, updateUserDisplayName, updateUserDayTask} from './actions/userActions';
 import {fetchBackgroundUrl} from './actions/backgroundActions';
 // LETS GO.
 
@@ -21,7 +21,8 @@ class Home extends Component {
         let get_user_data = firebase.database().ref('users/' + user.uid + '/');
         get_user_data.on('value', snap => {
           console.log(snap.val());
-          this.props.updateUserData(snap.val())
+          this.props.updateUserDisplayName(snap.val().display_name),
+          this.props.updateUserDayTask(snap.val().day_task)
         })
       }  
     });
@@ -50,14 +51,17 @@ const mapDispatchToProps = (dispatch) => {
     updateUserStatus: (status) => {
       dispatch(updateUserStatus(status));
     },
-    updateUserData: (data) => {
-      dispatch(updateUserData(data));
+    updateUserDisplayName: (name) => {
+      dispatch(updateUserDisplayName(name));
     },
     UpdateUserId: (id) => {
       dispatch(UpdateUserId(id));
     },
     fetchBackgroundUrl: () => {
       dispatch(fetchBackgroundUrl());
+    },
+    updateUserDayTask: (task) => {
+      dispatch(updateUserDayTask(task));
     }
   }
 }

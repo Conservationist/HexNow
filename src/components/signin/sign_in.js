@@ -5,7 +5,8 @@ import {SPAN, DIV} from './sign_in.style';
 import Login from './login';
 import Register from './register';
 import {updateUserStatus} from '../../actions/loggedActions';
-import {SetUserErrorMessage, SetUserLoginType, DisplayLoginModal, SetRegistrationMode} from '../../actions/registrationActions';
+import {updateUserData} from '../../actions/userActions';
+import {SetUserLoginType, DisplayLoginModal, SetRegistrationMode} from '../../actions/displayActions';
 
 class SignIn extends React.Component {
     componentDidMount() {
@@ -26,6 +27,7 @@ class SignIn extends React.Component {
             firebase.auth().signOut();
             this.props.DisplayLoginModal(false);
             this.props.updateUserStatus(false);
+            this.props.updateUserData();
         }
     }
     handleLogin(email, password){
@@ -34,7 +36,7 @@ class SignIn extends React.Component {
             .catch(e => {
                 let errorMessage = e.message;
                 if(errorMessage != null){
-                    this.props.SetUserErrorMessage(errorMessage);
+                    // this.props.SetUserErrorMessage(errorMessage);
                     return;
                 }
             });
@@ -54,7 +56,7 @@ class SignIn extends React.Component {
             .catch(e => {
                 let errorMessage = e.message;
                 if(errorMessage != null){
-                    this.props.SetUserErrorMessage(errorMessage);
+                    // this.props.SetUserErrorMessage(errorMessage);
                     return;
                 }
             });
@@ -72,17 +74,18 @@ class SignIn extends React.Component {
         });
     }
     render(){
-        console.log(this.props.register.display_reg_mode);
+        console.log(this.props.display.display_reg_mode);
         let Template = () => {
-            if(this.props.register.display_reg_mode === false){
+            if(this.props.display.display_reg_mode === false){
                 return <Login/>
             } else {
+                console.log('wtf');
                 return <Register/>
             }
         }
         return(
             <DIV>
-                <SPAN onClick={this.handleClick.bind(this)}>{this.props.register.user_login_type}</SPAN>
+                <SPAN onClick={this.handleClick.bind(this)}>{this.props.display.user_login_type}</SPAN>
                 <Template/>
             </DIV>
         )
@@ -91,7 +94,7 @@ class SignIn extends React.Component {
 const mapStateToProps = (state) => {
     return {
       status: state.logged_status.logged_in,
-      register: state.register,
+      display: state.display,
     }
   }
 const mapDispatchToProps = (dispatch) => {
@@ -108,9 +111,12 @@ const mapDispatchToProps = (dispatch) => {
         SetUserLoginType: (loginType) => {
             dispatch(SetUserLoginType(loginType));
         },
-        SetUserErrorMessage: (message) => {
-            dispatch(SetUserErrorMessage(message));
+        updateUserData: () => {
+            dispatch(updateUserData());
         }
+        // SetUserErrorMessage: (message) => {
+        //     dispatch(SetUserErrorMessage(message));
+        // }
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn)

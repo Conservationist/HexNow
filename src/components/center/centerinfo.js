@@ -17,7 +17,7 @@ class CenterInfo extends React.Component {
             <DIV>
                 <H1>The time is currently</H1>
                 <CenterTime prefTime={this.props.user.user_pref_time}/>
-                <H1>{this.props.user.user_name}.</H1>
+                <H1>{this.props.user.user_display_name}.</H1>
             </DIV>
             <div>
                 <InputTrigger userTask={this.props.user.user_task} userid={this.props.user.user_id} username={this.props.user.userDisplay_name} loggedin={this.props.status}/>

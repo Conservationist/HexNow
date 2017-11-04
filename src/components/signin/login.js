@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {ModalStyles, H1, ContentDiv, CloseModal, RegisterText, RegisterLink, SignInButton} from './sign_in.style';
 import {connect} from 'react-redux';
-import {LogUserIn, DisplayLoginModal, SetUserEmail, SetUserPassword, SetRegistrationMode} from '../../actions/registrationActions';
-import LoginInput from './login.input'
+import {LogUserIn, SetUserEmail, SetUserPassword} from '../../actions/registrationActions';
+import {DisplayLoginModal, SetRegistrationMode} from '../../actions/displayActions';
+import LoginInput from './login.input';
+import {ModalInput} from './sign_in.style';
+
 class Login extends Component {
     handleChange(e, val, name){
         console.log(e);
@@ -15,28 +18,36 @@ class Login extends Component {
     }
     handleRegister(props){
         const register_display = true;
-        this.props.registertoggle(register_display);
+        this.props.SetRegistrationMode(register_display);
     }
     closeModal(e){
         this.props.DisplayLoginModal(false)
     }
     loginClick(e){
         e.preventDefault(e)
-        this.props.LogUserIn(this.props.user_email, this.props.user_password);
+        console.log(this.props.register)
+        this.props.LogUserIn(this.props.register.user_email, this.props.register.user_password);
+    }
+    handleChange(event){
+        if(event.target.name === 'email'){
+            this.props.SetUserEmail(event.target.value);
+        } else {
+            this.props.SetUserPassword(event.target.value);
+        }
     }
     render() {
         console.log(this.props.register.user_email);
         return (
             <Modal
-            isOpen={this.props.register.display_login_modal}
+            isOpen={this.props.display.display_login_modal}
             style={ModalStyles}>
                 <H1>Login</H1>
                 <RegisterText>New user? Register <RegisterLink onClick={this.handleRegister.bind(this)}>here</RegisterLink>.</RegisterText>
                 <ContentDiv>
                     <form>
-                        <LoginInput InputValue={this.handleChange.bind(this)}inputType={'email'} inputName={'email'} inputPlaceholder={'Email Adress'}/>
+                        <ModalInput name='email' placeholder='Email Adress' type='text' onChange={this.handleChange.bind(this)}/>
                         <br />
-                        <LoginInput inputType={'password'} inputName={'password'} inputPlaceholder={'Password'}/>
+                        <ModalInput name='password' placeholder='Password' type='password' onChange={this.handleChange.bind(this)}/>
                         <br />
                         <SignInButton onClick={this.loginClick.bind(this)}>Log in</SignInButton>
                         <br />
@@ -52,7 +63,8 @@ class Login extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-      register: state.register
+      register: state.register,
+      display: state.display
     }
   }
 const mapDispatchToProps = (dispatch) => {
@@ -68,6 +80,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         LogUserIn: (email, password) => {
             dispatch(LogUserIn(email, password));
+        },
+        SetRegistrationMode: (bool) => {
+            dispatch(SetRegistrationMode(bool));
         }
     }
 }

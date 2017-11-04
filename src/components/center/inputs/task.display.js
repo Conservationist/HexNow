@@ -5,11 +5,16 @@ import firebase from 'firebase';
 class TaskDisplay extends Component {
     constructor(props){
         super(props);
-        this.handleClick = this.handleClick.bind(this);
+        this.state = {
+            style: '',
+        }
     }
     handleClick(){
         let user_id = this.props.userid;
         firebase.database().ref("users/" + user_id + '/day_task').remove();
+    }
+    handleComplete(){
+        this.setState({style: 'line-through'})
     }
     render() {
         return (
@@ -17,10 +22,10 @@ class TaskDisplay extends Component {
                 <H1>This is your current task for the day.</H1>
                 <br />
                 <Fade>
-                    <H1>{this.props.task}</H1>
+                    <H1 onClick={this.handleComplete.bind(this)}>{this.props.task}</H1>
                 </Fade>
                 <br />
-                <button onClick={this.handleClick}>delete curr task (placeholder)</button>
+                <button onClick={this.handleClick.bind(this)}>delete curr task (placeholder)</button>
             </DIV>
         );
     }

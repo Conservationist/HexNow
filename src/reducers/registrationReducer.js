@@ -2,9 +2,6 @@ let defaultState = {
         user_email: '',
         user_password: '',
         user_conf_password: '',
-        display_login_modal: false,
-        display_reg_mode: false,
-        user_login_type: null,
         user_error_message: null
 };
 export const registrationReducer = (state = defaultState, action) => {
@@ -27,26 +24,6 @@ export const registrationReducer = (state = defaultState, action) => {
                 ...state,
                 user_conf_password: action.payload
             };
-            break;
-        case 'DISPLAY_LOGIN_MODAL':
-            state = {
-                ...state,
-                display_login_modal: action.payload
-            };
-            break;
-        case 'DISPLAY_REGISTER_MODE':
-            state = {
-                ...state,
-                display_reg_mode: action.payload
-                
-            }
-            break;
-        case 'DISPLAY_LOGIN_TYPE':
-            state = {
-                ...state,
-                user_login_type: action.payload
-                
-            }
             break;
         case 'SET_ERROR_MESSAGE':
             state = {

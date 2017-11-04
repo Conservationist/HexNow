@@ -1,7 +1,7 @@
 let defaultState = {
-    user_name: 'User',
+    user_display_name: 'User',
     user_id: null,
-    user_pref_time: 12,
+    user_pref_time: 24,
     user_task: null
 };
 
@@ -9,10 +9,7 @@ export const userReducer = (state = defaultState, action) => {
     // eslint-disable-next-line
     switch (action.type){
         case 'SET_USER_DATA':
-            state = {
-                ...state,
-                user_data: action.payload
-            };
+            state = defaultState
             break;
         case 'SET_USER_NAME':
             state = {
